@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gerçek Zamanlı Mesaj Görüntüleme</title>
+    <style>
+        #message-box {
+            border: 1px solid #ccc;
+            padding: 10px;
+            white-space: pre-wrap;
+            font-family: monospace;
+            background-color: #f9f9f9;
+            height: 300px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Gelen JSON Mesajlar</h1>
+    <form method="POST" action="/clear">
+        <button type="submit">Temizle</button>
+    </form>
+    <div id="message-box">Mesajlar yükleniyor...</div>
+
+    <script>
+        async function fetchMessages() {
+            const response = await fetch('/api/messages');
+            const data = await response.json();
+            const box = document.getElementById('message-box');
+            box.textContent = data.messages.map(msg => JSON.stringify(msg, null, 2)).join('\n\n');
+        }
+
+        // İlk yüklemede getir
+        fetchMessages();
+
+        // Her 2 saniyede bir güncelle
+        setInterval(fetchMessages, 2000);
+    </script>
+</body>
+</html>
