@@ -1,39 +1,37 @@
 <!DOCTYPE html>
-<html>
+<html lang="tr">
 <head>
-    <title>Gerçek Zamanlı Mesaj Görüntüleme</title>
+    <meta charset="UTF-8" />
+    <title>Mesajlar</title>
     <style>
-        #message-box {
-            border: 1px solid #ccc;
-            padding: 10px;
-            white-space: pre-wrap;
-            font-family: monospace;
-            background-color: #f9f9f9;
-            height: 300px;
-            overflow-y: auto;
-        }
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        #messages { white-space: pre-wrap; background: #f0f0f0; padding: 10px; height: 400px; overflow-y: scroll; border: 1px solid #ccc; }
+        button { margin-top: 10px; padding: 5px 10px; }
     </style>
+    <script>
+        function clearMessages() {
+            fetch('/clear_messages', { method: 'POST' })
+            .then(() => {
+                document.getElementById('messages').textContent = '';
+            });
+        }
+
+        // Gerçek zamanlı güncelleme için polling (2 saniyede bir yeniler)
+        function fetchMessages() {
+            fetch('/get_messages')
+                .then(response => response.json())
+                .then(data => {
+                    const msgArea = document.getElementById('messages');
+                    msgArea.textContent = JSON.stringify(data.messages, null, 2);
+                });
+        }
+        setInterval(fetchMessages, 2000);
+        window.onload = fetchMessages;
+    </script>
 </head>
 <body>
-    <h1>Gelen JSON Mesajlar</h1>
-    <form method="POST" action="/clear">
-        <button type="submit">Temizle</button>
-    </form>
-    <div id="message-box">Mesajlar yükleniyor...</div>
-
-    <script>
-        async function fetchMessages() {
-            const response = await fetch('/api/messages');
-            const data = await response.json();
-            const box = document.getElementById('message-box');
-            box.textContent = data.messages.map(msg => JSON.stringify(msg, null, 2)).join('\n\n');
-        }
-
-        // İlk yüklemede getir
-        fetchMessages();
-
-        // Her 2 saniyede bir güncelle
-        setInterval(fetchMessages, 2000);
-    </script>
+    <h1>Gelen Mesajlar</h1>
+    <pre id="messages"></pre>
+    <button onclick="clearMessages()">Temizle</button>
 </body>
 </html>

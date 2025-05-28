@@ -1,26 +1,35 @@
-from flask import Flask, request, render_template, redirect, url_for
+from flask import Flask, request, jsonify, render_template
 
 app = Flask(__name__)
-messages = []
+
+messages = []  # Gelen mesajları burada tutuyoruz
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', messages=messages)
 
-@app.route('/post', methods=['POST'])
-def receive_post():
-    data = request.get_json(force=True)
-    messages.append(data)
-    return {'status': 'ok'}
+@app.route('/Api/indicatorapi/milk-delivery/<string:user_id>', methods=['POST'])
+def milk_delivery(user_id):
+    data = request.get_json()
+    if not data:
+        return jsonify({'status': 'error', 'message': 'Geçerli JSON gönderiniz'}), 400
 
-@app.route('/clear', methods=['POST'])
+    message = {
+        'user_id': user_id,
+        'data': data
+    }
+    messages.append(message)
+
+    return jsonify({'status': 'success', 'received': message})
+
+@app.route('/clear_messages', methods=['POST'])
 def clear_messages():
     messages.clear()
-    return redirect(url_for('index'))
+    return '', 204
 
-@app.route('/api/messages', methods=['GET'])
+@app.route('/get_messages')
 def get_messages():
-    return {'messages': messages}
+    return jsonify({'messages': messages})
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
+    app.run(host='0.0.0.0', port=5000)
