@@ -4,21 +4,20 @@ import pytz
 import uuid
 
 app = Flask(__name__)
-messages = []
 
-# Ana sayfa
+messages = []
+custom_response = ""  # index.html'deki GET cevabı burada tutulacak
+
 @app.route('/')
 def index():
-    return render_template('index.html', messages=messages)
+    return render_template('index.html', messages=messages, custom_response=custom_response)
 
-# POST endpoint: /Api/indicatorapi/milk-delivery/<user_id>
 @app.route('/Api/indicatorapi/milk-delivery/<string:user_id>', methods=['POST'])
 def milk_delivery(user_id):
     data = request.get_json()
     if not data:
         return jsonify({'status': 'error', 'message': 'Geçerli JSON gönderiniz'}), 400
 
-    # Mesajı kaydet
     message = {
         'user_id': user_id,
         'data': data
@@ -41,37 +40,25 @@ def milk_delivery(user_id):
 
     return jsonify(response), 200
 
-# GET endpoint: /api/indicatorapi/get-members/<mac_id>
-@app.route('/api/indicatorapi/get-members/<string:mac_id>')
+@app.route('/api/indicatorapi/get-members/<string:mac_id>', methods=['GET'])
 def get_members(mac_id):
-    # URL query parametreleri: $top ve $skip
-    top = request.args.get('$top', default=10, type=int)
-    skip = request.args.get('$skip', default=0, type=int)
+    try:
+        response_data = json.loads(custom_response)
+        return jsonify(response_data)
+    except Exception:
+        return jsonify({"error": "Geçerli bir JSON değil"}), 400
 
-    # Burada kendi mantığını ekleyebilirsin, örnek:
-    # Gelen mac_id'ye göre bazı işlemler yap, mesaj al ya da döndür
+@app.route('/set_get_response', methods=['POST'])
+def set_get_response():
+    global custom_response
+    custom_response = request.form.get('get_response', '')
+    return '', 204
 
-    # Burada metin kutusundan döndürülecek örnek JSON sabit olarak:
-    example_response = {
-        "Status": True,
-        "Data": {
-            "Id": "abcdef12-3456-7890-abcd-ef1234567890",
-            "IndexNumber": "999"
-        },
-        "Message": "10000",
-        "MessageCode": "Başarılı",
-        "CurrentDateTime": datetime.now(pytz.timezone("Europe/Istanbul")).isoformat()
-    }
-
-    return jsonify(example_response), 200
-
-# Mesajları temizle
 @app.route('/clear_messages', methods=['POST'])
 def clear_messages():
     messages.clear()
     return '', 204
 
-# Mesajları listele
 @app.route('/get_messages')
 def get_messages():
     return jsonify({'messages': messages})

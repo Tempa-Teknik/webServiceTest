@@ -6,8 +6,8 @@
     <style>
         body { font-family: Arial, sans-serif; padding: 20px; }
         #messages { white-space: pre-wrap; background: #f0f0f0; padding: 10px; height: 400px; overflow-y: scroll; border: 1px solid #ccc; }
+        textarea { width: 100%; height: 150px; margin-top: 20px; }
         button { margin-top: 10px; padding: 5px 10px; }
-        textarea { width: 100%; height: 200px; margin-top: 10px; font-family: monospace; }
     </style>
     <script>
         function clearMessages() {
@@ -17,14 +17,13 @@
             });
         }
 
-        function saveMemberResponse() {
-            const content = document.getElementById('memberResponse').value;
-            fetch('/set_member_response', {
+        function saveGetResponse() {
+            const responseText = document.getElementById('get_response').value;
+            const formData = new FormData();
+            formData.append('get_response', responseText);
+            fetch('/set_get_response', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ response: content })
+                body: formData
             });
         }
 
@@ -32,10 +31,10 @@
             fetch('/get_messages')
                 .then(response => response.json())
                 .then(data => {
-                    const msgArea = document.getElementById('messages');
-                    msgArea.textContent = JSON.stringify(data.messages, null, 2);
+                    document.getElementById('messages').textContent = JSON.stringify(data.messages, null, 2);
                 });
         }
+
         setInterval(fetchMessages, 2000);
         window.onload = fetchMessages;
     </script>
@@ -45,8 +44,9 @@
     <pre id="messages"></pre>
     <button onclick="clearMessages()">Temizle</button>
 
-    <h2>/get-members Cevabı</h2>
-    <textarea id="memberResponse" placeholder="Buraya JSON cevabını yaz..."></textarea>
-    <button onclick="saveMemberResponse()">Cevabı Kaydet</button>
+    <h2>GET İsteğine Dönülecek Özel Yanıt</h2>
+    <textarea id="get_response">{{ custom_response }}</textarea>
+    <br>
+    <button onclick="saveGetResponse()">Kaydet</button>
 </body>
 </html>
