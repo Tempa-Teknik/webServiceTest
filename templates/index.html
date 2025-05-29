@@ -27,6 +27,16 @@
             });
         }
 
+        function saveGetUsersResponse() {
+            const responseText = document.getElementById('get_users_response').value;
+            const formData = new FormData();
+            formData.append('get_users_response', responseText);
+            fetch('/set_get_users_response', {
+                method: 'POST',
+                body: formData
+            });
+        }
+
         function fetchMessages() {
             fetch('/get_messages')
                 .then(response => response.json())
@@ -44,9 +54,14 @@
     <pre id="messages"></pre>
     <button onclick="clearMessages()">Temizle</button>
 
-    <h2>GET İsteğine Dönülecek Özel Yanıt</h2>
+    <h2>GET Members</h2>
     <textarea id="get_response">{{ custom_response }}</textarea>
     <br>
     <button onclick="saveGetResponse()">Kaydet</button>
+
+    <h2>GET Users</h2>
+    <textarea id="get_users_response">{{ custom_users_response }}</textarea>
+    <br>
+    <button onclick="saveGetUsersResponse()">Kaydet</button>
 </body>
 </html>
