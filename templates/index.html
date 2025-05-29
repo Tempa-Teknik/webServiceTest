@@ -18,20 +18,14 @@
         }
 
         function saveGetResponse() {
-            const responseText = document.getElementById('get_response').value;
-            const formData = new FormData();
-            formData.append('get_response', responseText);
-            fetch('/set_get_response', {
-                method: 'POST',
-                body: formData
-            });
-        }
+            const membersText = document.getElementById('get_response').value;
+            const usersText = document.getElementById('get_users_response').value;
 
-        function saveGetUsersResponse() {
-            const responseText = document.getElementById('get_users_response').value;
             const formData = new FormData();
-            formData.append('get_users_response', responseText);
-            fetch('/set_get_users_response', {
+            formData.append('get_response', membersText);
+            formData.append('get_users_response', usersText);
+
+            fetch('/set_get_response', {
                 method: 'POST',
                 body: formData
             });
@@ -56,12 +50,11 @@
 
     <h2>GET Members</h2>
     <textarea id="get_response">{{ custom_response }}</textarea>
-    <br>
-    <button onclick="saveGetResponse()">Kaydet</button>
 
     <h2>GET Users</h2>
-    <textarea id="get_users_response">{{ custom_users_response }}</textarea>
+    <textarea id="get_users_response">{{ custom_response_users }}</textarea>
+
     <br>
-    <button onclick="saveGetUsersResponse()">Kaydet</button>
+    <button onclick="saveGetResponse()">Kaydet</button>
 </body>
 </html>
