@@ -42,11 +42,13 @@ def milk_delivery(user_id):
 
 @app.route('/api/indicatorapi/get-members/<string:mac_id>', methods=['GET'])
 def get_members(mac_id):
-    try:
+    """try:
         response_data = json.loads(custom_response)
         return jsonify(response_data)
     except Exception:
-        return jsonify({"error": "Geçerli bir JSON değil"}), 400
+        return jsonify({"error": "Geçerli bir JSON değil"}), 400 """
+    response_data = json.loads(custom_response)
+    return jsonify(response_data)
 
 @app.route('/set_get_response', methods=['POST'])
 def set_get_response():
