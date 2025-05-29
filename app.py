@@ -2,9 +2,9 @@ from flask import Flask, request, jsonify, render_template
 from datetime import datetime
 import pytz
 import uuid
+import json
 
 app = Flask(__name__)
-
 messages = []
 custom_response = ""  # index.html'deki GET cevabı burada tutulacak
 
@@ -42,13 +42,14 @@ def milk_delivery(user_id):
 
 @app.route('/api/indicatorapi/get-members/<string:mac_id>', methods=['GET'])
 def get_members(mac_id):
-    """try:
+    global custom_response
+    try:
+        if custom_response.strip() == "":
+            return jsonify({"error": "Henüz bir yanıt girilmedi"}), 400
         response_data = json.loads(custom_response)
-        return jsonify(response_data)
-    except Exception:
-        return jsonify({"error": "Geçerli bir JSON değil"}), 400 """
-    response_data = json.loads(custom_response)
-    return jsonify(response_data)
+        return jsonify(response_data), 200
+    except json.JSONDecodeError:
+        return jsonify({"error": "Geçerli bir JSON değil"}), 400
 
 @app.route('/set_get_response', methods=['POST'])
 def set_get_response():
