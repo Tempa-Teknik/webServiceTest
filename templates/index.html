@@ -7,6 +7,7 @@
         body { font-family: Arial, sans-serif; padding: 20px; }
         #messages { white-space: pre-wrap; background: #f0f0f0; padding: 10px; height: 400px; overflow-y: scroll; border: 1px solid #ccc; }
         button { margin-top: 10px; padding: 5px 10px; }
+        textarea { width: 100%; height: 200px; margin-top: 10px; font-family: monospace; }
     </style>
     <script>
         function clearMessages() {
@@ -16,7 +17,17 @@
             });
         }
 
-        // Gerçek zamanlı güncelleme için polling (2 saniyede bir yeniler)
+        function saveMemberResponse() {
+            const content = document.getElementById('memberResponse').value;
+            fetch('/set_member_response', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ response: content })
+            });
+        }
+
         function fetchMessages() {
             fetch('/get_messages')
                 .then(response => response.json())
@@ -33,5 +44,9 @@
     <h1>Gelen Mesajlar</h1>
     <pre id="messages"></pre>
     <button onclick="clearMessages()">Temizle</button>
+
+    <h2>/get-members Cevabı</h2>
+    <textarea id="memberResponse" placeholder="Buraya JSON cevabını yaz..."></textarea>
+    <button onclick="saveMemberResponse()">Cevabı Kaydet</button>
 </body>
 </html>
