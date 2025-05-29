@@ -1,22 +1,24 @@
-from flask import Flask, request, jsonify, render_template, redirect
+from flask import Flask, request, jsonify, render_template
 from datetime import datetime
 import pytz
 import uuid
 
 app = Flask(__name__)
 messages = []
-get_members_response = "{}"  # Başlangıç değeri
 
+# Ana sayfa
 @app.route('/')
 def index():
-    return render_template('index.html', messages=messages, get_members_response=get_members_response)
+    return render_template('index.html', messages=messages)
 
+# POST endpoint: /Api/indicatorapi/milk-delivery/<user_id>
 @app.route('/Api/indicatorapi/milk-delivery/<string:user_id>', methods=['POST'])
 def milk_delivery(user_id):
     data = request.get_json()
     if not data:
         return jsonify({'status': 'error', 'message': 'Geçerli JSON gönderiniz'}), 400
 
+    # Mesajı kaydet
     message = {
         'user_id': user_id,
         'data': data
@@ -39,24 +41,37 @@ def milk_delivery(user_id):
 
     return jsonify(response), 200
 
-@app.route('/api/indicatorapi/get-members/<string:mac_id>', methods=['GET'])
+# GET endpoint: /api/indicatorapi/get-members/<mac_id>
+@app.route('/api/indicatorapi/get-members/<string:mac_id>')
 def get_members(mac_id):
-    try:
-        return app.response_class(response=get_members_response, status=200, mimetype='application/json')
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+    # URL query parametreleri: $top ve $skip
+    top = request.args.get('$top', default=10, type=int)
+    skip = request.args.get('$skip', default=0, type=int)
 
-@app.route('/save_get_members_response', methods=['POST'])
-def save_get_members_response():
-    global get_members_response
-    get_members_response = request.form.get("get_members_response", "{}")
-    return redirect("/")
+    # Burada kendi mantığını ekleyebilirsin, örnek:
+    # Gelen mac_id'ye göre bazı işlemler yap, mesaj al ya da döndür
 
+    # Burada metin kutusundan döndürülecek örnek JSON sabit olarak:
+    example_response = {
+        "Status": True,
+        "Data": {
+            "Id": "abcdef12-3456-7890-abcd-ef1234567890",
+            "IndexNumber": "999"
+        },
+        "Message": "10000",
+        "MessageCode": "Başarılı",
+        "CurrentDateTime": datetime.now(pytz.timezone("Europe/Istanbul")).isoformat()
+    }
+
+    return jsonify(example_response), 200
+
+# Mesajları temizle
 @app.route('/clear_messages', methods=['POST'])
 def clear_messages():
     messages.clear()
     return '', 204
 
+# Mesajları listele
 @app.route('/get_messages')
 def get_messages():
     return jsonify({'messages': messages})
