@@ -33,13 +33,8 @@
                 if (response.ok) {
                     alert("Yanıtlar başarıyla kaydedildi.");
                 } else {
-                    return response.text().then(text => {
-                        alert("Hata oluştu: " + text);
-                    });
+                    alert("Kaydetme hatası.");
                 }
-            })
-            .catch(error => {
-                alert("İstek sırasında bir hata oluştu: " + error);
             });
         }
 
@@ -60,10 +55,10 @@
     <pre id="messages"></pre>
     <button onclick="clearMessages()">Temizle</button>
 
-    <h2>GET Members</h2>
+    <h2>GET Members Yanıtı</h2>
     <textarea id="get_response">{{ custom_response }}</textarea>
 
-    <h2>GET Users</h2>
+    <h2>GET Users Yanıtı</h2>
     <textarea id="get_users_response">{{ custom_response_users }}</textarea>
 
     <br>

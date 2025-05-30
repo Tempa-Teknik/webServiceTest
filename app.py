@@ -6,8 +6,8 @@ import json
 
 app = Flask(__name__)
 messages = []
-custom_response_members = ""  # get-members cevabı
-custom_response_users = ""    # get-users cevabı
+custom_response_members = ""  # /get-members cevabı
+custom_response_users = ""    # /get-users cevabı
 
 @app.route('/')
 def index():
@@ -50,7 +50,7 @@ def milk_delivery(user_id):
 def get_members(mac_id):
     global custom_response_members
     try:
-        if custom_response_members.strip() == "":
+        if not custom_response_members.strip():
             return jsonify({"error": "Henüz bir yanıt girilmedi"}), 400
         response_data = json.loads(custom_response_members)
         return jsonify(response_data), 200
@@ -61,7 +61,7 @@ def get_members(mac_id):
 def get_users(mac_id):
     global custom_response_users
     try:
-        if custom_response_users.strip() == "":
+        if not custom_response_users.strip():
             return jsonify({"error": "Henüz bir yanıt girilmedi"}), 400
         response_data = json.loads(custom_response_users)
         return jsonify(response_data), 200
