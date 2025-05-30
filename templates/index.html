@@ -28,6 +28,18 @@
             fetch('/set_get_response', {
                 method: 'POST',
                 body: formData
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert("Yanıtlar başarıyla kaydedildi.");
+                } else {
+                    return response.text().then(text => {
+                        alert("Hata oluştu: " + text);
+                    });
+                }
+            })
+            .catch(error => {
+                alert("İstek sırasında bir hata oluştu: " + error);
             });
         }
 
