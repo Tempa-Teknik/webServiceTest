@@ -56,10 +56,11 @@
     <button onclick="clearMessages()">Temizle</button>
 
     <h2>GET Members Yanıtı</h2>
-    <textarea id="get_response">{{ custom_response }}</textarea>
+	<textarea id="get_response" name="get_response">{{ custom_response }}</textarea>
 
-    <h2>GET Users Yanıtı</h2>
-    <textarea id="get_users_response">{{ custom_response_users }}</textarea>
+	<h2>GET Users Yanıtı</h2>
+	<textarea id="get_users_response" name="get_users_response">{{ custom_response_users }}</textarea>
+
 
     <br>
     <button onclick="saveGetResponse()">Kaydet</button>
