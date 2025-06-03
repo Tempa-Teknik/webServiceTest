@@ -18,7 +18,7 @@ def index():
         custom_response_users=custom_response_users
     )
 
-@app.route('/Api/indicatorapi/milk-delivery/<string:user_id>', methods=['POST'])
+@app.route('/api/indicatorapi/milk-delivery/<string:user_id>', methods=['POST'])
 def milk_delivery(user_id):
     data = request.get_json()
     if not data:
