@@ -20,21 +20,17 @@ def index():
 
 @app.route('/api/indicatorapi/milk-delivery/<string:user_id>', methods=['POST'])
 def milk_delivery(user_id):
-    try:
-        # JSON'ı ham veri olarak al
-        raw_data = request.data.decode('utf-8')
-        data = json.loads(raw_data)
-    except Exception as e:
-        return jsonify({'status': 'error', 'message': f'JSON ayrıştırma hatası: {str(e)}'}), 400
+    data = request.get_json()
+    if not data:
+        return jsonify({'status': 'error', 'message': 'Geçerli JSON gönderiniz'}), 400
 
     message = {
-        'timestamp': datetime.now(pytz.timezone("Europe/Istanbul")).isoformat(),
         'user_id': user_id,
         'data': data
     }
     messages.append(message)
 
-    index_number = data.get("IndexNumber", "UNKNOWN")
+    index_number = data.get("indexNumber", "UNKNOWN")
     generated_id = str(uuid.uuid4())
 
     response = {
