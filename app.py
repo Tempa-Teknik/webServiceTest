@@ -18,6 +18,10 @@ def index():
         custom_response_users=custom_response_users
     )
 
+@app.route('//api/indicatorapi/milk-delivery/<string:user_id>', methods=['POST'])
+def milk_delivery_double_slash(user_id):
+    return milk_delivery(user_id)
+
 @app.route('/api/indicatorapi/milk-delivery/<string:user_id>', methods=['POST'])
 def milk_delivery(user_id):
     data = request.get_json()
