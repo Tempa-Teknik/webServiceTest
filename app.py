@@ -9,6 +9,21 @@ messages = []
 custom_response_members = ""  # /get-members cevabı
 custom_response_users = ""    # /get-users cevabı
 
+@app.before_request
+def log_request_info():
+    print("\n--- Yeni İstek ---")
+    print("URL:", request.url)
+    print("Method:", request.method)
+    print("Headers:")
+    for k, v in request.headers.items():
+        print(f"  {k}: {v}")
+    print("Body (raw data):")
+    try:
+        print(request.get_data().decode('utf-8'))
+    except Exception as e:
+        print("[Body okunamadı]", e)
+    print("--- İstek Sonu ---\n")
+    
 @app.route('/')
 def index():
     return render_template(
