@@ -9,6 +9,7 @@ messages = []
 custom_response_members = ""  # /get-members cevabı
 custom_response_users = ""    # /get-users cevabı
 
+"""
 @app.before_request
 def log_request_info():
     print("\n--- Yeni İstek ---")
@@ -23,7 +24,7 @@ def log_request_info():
     except Exception as e:
         print("[Body okunamadı]", e)
     print("--- İstek Sonu ---\n")
-    
+    """
 @app.route('/')
 def index():
     return render_template(
@@ -32,10 +33,11 @@ def index():
         custom_response=custom_response_members,
         custom_response_users=custom_response_users
     )
-
+"""
 @app.route('//api/indicatorapi/milk-delivery/<string:user_id>', methods=['POST'])
 def milk_delivery_double_slash(user_id):
     return milk_delivery(user_id)
+    """
 
 @app.route('/api/indicatorapi/milk-delivery/<string:user_id>', methods=['POST'])
 def milk_delivery(user_id):
