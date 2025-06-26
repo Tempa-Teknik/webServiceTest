@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, Response
 from datetime import datetime
 import pytz
 import uuid
@@ -9,22 +9,6 @@ messages = []
 custom_response_members = ""  # /get-members cevabı
 custom_response_users = ""    # /get-users cevabı
 
-"""
-@app.before_request
-def log_request_info():
-    print("\n--- Yeni İstek ---")
-    print("URL:", request.url)
-    print("Method:", request.method)
-    print("Headers:")
-    for k, v in request.headers.items():
-        print(f"  {k}: {v}")
-    print("Body (raw data):")
-    try:
-        print(request.get_data().decode('utf-8'))
-    except Exception as e:
-        print("[Body okunamadı]", e)
-    print("--- İstek Sonu ---\n")
-    """
 @app.route('/')
 def index():
     return render_template(
@@ -33,11 +17,6 @@ def index():
         custom_response=custom_response_members,
         custom_response_users=custom_response_users
     )
-"""
-@app.route('//api/indicatorapi/milk-delivery/<string:user_id>', methods=['POST'])
-def milk_delivery_double_slash(user_id):
-    return milk_delivery(user_id)
-    """
 
 @app.route('/api/indicatorapi/milk-delivery/<string:user_id>', methods=['POST'])
 def milk_delivery(user_id):
@@ -65,7 +44,11 @@ def milk_delivery(user_id):
         "CurrentDateTime": datetime.now(pytz.timezone("Europe/Istanbul")).isoformat()
     }
 
-    return jsonify(response), 200
+    return Response(
+        json.dumps(response, separators=(",", ":"), ensure_ascii=False),
+        status=200,
+        mimetype='application/json'
+    )
 
 @app.route('/api/indicatorapi/get-members/<string:mac_id>', methods=['GET'])
 def get_members(mac_id):
