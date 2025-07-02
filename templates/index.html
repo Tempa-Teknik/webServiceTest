@@ -12,9 +12,9 @@
     <script>
         function clearMessages() {
             fetch('/clear_messages', { method: 'POST' })
-            .then(() => {
-                document.getElementById('messages').textContent = '';
-            });
+                .then(() => {
+                    document.getElementById('messages').textContent = '';
+                });
         }
 
         function saveGetResponse() {
@@ -39,39 +39,37 @@
         }
 
         function fetchMessages() {
-			fetch('/get_messages')
-				.then(response => response.json())
-				.then(data => {
-					const formattedMessages = data.messages.map(msg => {
-						// Derin kopya
-						let copy = JSON.parse(JSON.stringify(msg));
-						
-						// "copy.data" içinde tekrar "data" varsa oraya git
-						let innerData = copy.data;
-						if (innerData && innerData.data) {
-							innerData = innerData.data;
-						}
+            fetch('/get_messages')
+                .then(response => response.json())
+                .then(data => {
+                    const formattedMessages = data.messages.map(msg => {
+                        const deepCopy = JSON.parse(JSON.stringify(msg));
+                        let inner = deepCopy.data;
 
-						if (innerData) {
-							if (innerData.Amount !== undefined) {
-								innerData.Amount = Number(innerData.Amount).toFixed(3);
-							}
-							if (innerData.Weight !== undefined) {
-								innerData.Weight = Number(innerData.Weight).toFixed(3);
-							}
-						}
+                        if (inner && inner.data) {
+                            inner = inner.data;
+                        }
 
-						return copy;
-					});
+                        if (inner) {
+                            if (inner.Amount !== undefined) {
+                                inner.Amount = parseFloat(inner.Amount).toFixed(3);
+                            }
+                            if (inner.Weight !== undefined) {
+                                inner.Weight = parseFloat(inner.Weight).toFixed(3);
+                            }
+                        }
 
-					document.getElementById('messages').textContent = formattedMessages
-						.map(msg => JSON.stringify(msg, null, 2))
-						.join('\n\n');
-				});
-		}
+                        return deepCopy;
+                    });
 
-		setInterval(fetchMessages, 2000);
-		window.onload = fetchMessages;
+                    document.getElementById('messages').textContent = formattedMessages
+                        .map(msg => JSON.stringify(msg, null, 2))
+                        .join('\n\n');
+                });
+        }
+
+        setInterval(fetchMessages, 2000);
+        window.onload = fetchMessages;
     </script>
 </head>
 <body>
@@ -80,11 +78,10 @@
     <button onclick="clearMessages()">Temizle</button>
 
     <h2>GET Members Yanıtı</h2>
-	<textarea id="get_response" name="get_response">{{ custom_response }}</textarea>
+    <textarea id="get_response" name="get_response">{{ custom_response }}</textarea>
 
-	<h2>GET Users Yanıtı</h2>
-	<textarea id="get_users_response" name="get_users_response">{{ custom_response_users }}</textarea>
-
+    <h2>GET Users Yanıtı</h2>
+    <textarea id="get_users_response" name="get_users_response">{{ custom_response_users }}</textarea>
 
     <br>
     <button onclick="saveGetResponse()">Kaydet</button>
