@@ -63,18 +63,22 @@ def milk_delivery(user_id):
     index_number = parsed.get("indexNumber", "UNKNOWN")
     generated_id = str(uuid.uuid4())
 
-    response = {
-        "Status": True,
-        "Data": {
-            "Id": generated_id,
-            "IndexNumber": index_number
-        },
-        "Message": "10000",
-        "MessageCode": "Başarılı",
-        "CurrentDateTime": datetime.now(pytz.timezone("Europe/Istanbul")).isoformat()
-    }
+    response = OrderedDict([
+        ("Status", True),
+        ("Data", OrderedDict([
+            ("Id", generated_id),
+            ("IndexNumber", index_number)
+        ])),
+        ("Message", "10000"),
+        ("MessageCode", "Başarılı"),
+        ("CurrentDateTime", datetime.now(pytz.timezone("Europe/Istanbul")).isoformat())
+    ])
 
-    return jsonify(response), 200
+    return app.response_class(
+        response=json.dumps(response, ensure_ascii=False),
+        status=200,
+        mimetype='application/json'
+    )
 
 @app.route('/api/indicatorapi/get-members/<string:mac_id>', methods=['GET'])
 def get_members(mac_id):
