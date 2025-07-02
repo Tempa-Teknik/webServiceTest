@@ -44,20 +44,23 @@
 				.then(data => {
 					const formattedMessages = data.messages.map(msg => {
 						let copy = JSON.parse(JSON.stringify(msg));
-
-						if (copy.data && copy.data.Amount !== undefined) {
-							copy.data.Amount = Number(copy.data.Amount).toFixed(3);
+						const innerData = copy.data && copy.data.data;
+						
+						if (innerData) {
+							if (innerData.Amount !== undefined) {
+								innerData.Amount = Number(innerData.Amount).toFixed(3);
+							}
+							if (innerData.Weight !== undefined) {
+								innerData.Weight = Number(innerData.Weight).toFixed(3);
+							}
 						}
-						if (copy.data && copy.data.Weight !== undefined) {
-							copy.data.Weight = Number(copy.data.Weight).toFixed(3);
-						}
-
 						return copy;
 					});
 
 					document.getElementById('messages').textContent = JSON.stringify(formattedMessages, null, 2);
 				});
 		}
+
 
 
         setInterval(fetchMessages, 2000);
