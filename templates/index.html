@@ -43,9 +43,15 @@
 				.then(response => response.json())
 				.then(data => {
 					const formattedMessages = data.messages.map(msg => {
+						// Derin kopya
 						let copy = JSON.parse(JSON.stringify(msg));
-						const innerData = copy.data && copy.data.data;
 						
+						// "copy.data" içinde tekrar "data" varsa oraya git
+						let innerData = copy.data;
+						if (innerData && innerData.data) {
+							innerData = innerData.data;
+						}
+
 						if (innerData) {
 							if (innerData.Amount !== undefined) {
 								innerData.Amount = Number(innerData.Amount).toFixed(3);
@@ -54,17 +60,18 @@
 								innerData.Weight = Number(innerData.Weight).toFixed(3);
 							}
 						}
+
 						return copy;
 					});
 
-					document.getElementById('messages').textContent = JSON.stringify(formattedMessages, null, 2);
+					document.getElementById('messages').textContent = formattedMessages
+						.map(msg => JSON.stringify(msg, null, 2))
+						.join('\n\n');
 				});
 		}
 
-
-
-        setInterval(fetchMessages, 2000);
-        window.onload = fetchMessages;
+		setInterval(fetchMessages, 2000);
+		window.onload = fetchMessages;
     </script>
 </head>
 <body>
