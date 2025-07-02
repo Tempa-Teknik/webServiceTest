@@ -45,6 +45,15 @@ def milk_delivery(user_id):
     except Exception:
         return jsonify({'status': 'error', 'message': 'Geçerli JSON gönderiniz'}), 400
 
+    # Buraya ekle:
+    amount_raw = parsed.get("Amount")
+    weight_raw = parsed.get("Weight")
+
+    if amount_raw is not None:
+        parsed["Amount"] = "{:.3f}".format(amount_raw)
+    if weight_raw is not None:
+        parsed["Weight"] = "{:.3f}".format(weight_raw)
+
     message = {
         'user_id': user_id,
         'data': parsed
