@@ -39,12 +39,26 @@
         }
 
         function fetchMessages() {
-            fetch('/get_messages')
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('messages').textContent = JSON.stringify(data.messages, null, 2);
-                });
-        }
+			fetch('/get_messages')
+				.then(response => response.json())
+				.then(data => {
+					const formattedMessages = data.messages.map(msg => {
+						let copy = JSON.parse(JSON.stringify(msg));
+
+						if (copy.data && copy.data.Amount !== undefined) {
+							copy.data.Amount = Number(copy.data.Amount).toFixed(3);
+						}
+						if (copy.data && copy.data.Weight !== undefined) {
+							copy.data.Weight = Number(copy.data.Weight).toFixed(3);
+						}
+
+						return copy;
+					});
+
+					document.getElementById('messages').textContent = JSON.stringify(formattedMessages, null, 2);
+				});
+		}
+
 
         setInterval(fetchMessages, 2000);
         window.onload = fetchMessages;
