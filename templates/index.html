@@ -39,37 +39,40 @@
         }
 
         function fetchMessages() {
-            fetch('/get_messages')
-                .then(response => response.json())
-                .then(data => {
-                    const formattedMessages = data.messages.map(msg => {
-                        const deepCopy = JSON.parse(JSON.stringify(msg));
-                        let inner = deepCopy.data;
+			fetch('/get_messages')
+				.then(response => response.json())
+				.then(data => {
+					const formattedMessages = data.messages.map(msg => {
+						const deepCopy = JSON.parse(JSON.stringify(msg));
+						let inner = deepCopy.data;
 
-                        if (inner && inner.data) {
-                            inner = inner.data;
-                        }
+						if (inner && inner.data) {
+							inner = inner.data;
+						}
 
-                        if (inner) {
-                            if (inner.Amount !== undefined) {
-                                inner.Amount = parseFloat(inner.Amount).toFixed(3);
-                            }
-                            if (inner.Weight !== undefined) {
-                                inner.Weight = parseFloat(inner.Weight).toFixed(3);
-                            }
-                        }
+						if (inner) {
+							if (inner.Amount !== undefined) {
+								inner.Amount = (Math.round(inner.Amount * 1000) / 1000).toFixed(3);
+							}
+							if (inner.Weight !== undefined) {
+								inner.Weight = (Math.round(inner.Weight * 1000) / 1000).toFixed(3);
+							}
+						}
 
-                        return deepCopy;
-                    });
+						return deepCopy;
+					});
 
-                    document.getElementById('messages').textContent = formattedMessages
-                        .map(msg => JSON.stringify(msg, null, 2))
-                        .join('\n\n');
-                });
-        }
+					// Her mesajı ayrı ayrı biçimlendir ve 2 satır arayla ayır
+					const finalText = formattedMessages
+						.map(msg => JSON.stringify(msg, null, 2))
+						.join('\n\n');
 
-        setInterval(fetchMessages, 2000);
-        window.onload = fetchMessages;
+					document.getElementById('messages').textContent = finalText;
+				});
+		}
+
+		setInterval(fetchMessages, 2000);
+		window.onload = fetchMessages;
     </script>
 </head>
 <body>
