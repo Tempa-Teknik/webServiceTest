@@ -39,7 +39,9 @@ def index():
 def milk_delivery(user_id):
     try:
         data = request.get_data()
+        print("Gelen ham veri:", data.decode('utf-8'))  # Ham veri (byte -> str)
         parsed = json.loads(data, object_pairs_hook=OrderedDict)
+        print("Parse edilmiş veri:", parsed)
     except Exception:
         return jsonify({'status': 'error', 'message': 'Geçerli JSON gönderiniz'}), 400
 
