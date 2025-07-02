@@ -105,7 +105,7 @@ def set_get_response():
             members_json = json.loads(raw_members, object_pairs_hook=OrderedDict)
             if "CurrentDateTime" in members_json:
                 members_json["CurrentDateTime"] = datetime.now(pytz.timezone("Europe/Istanbul")).isoformat()
-            custom_response_members = json.dumps(members_json, ensure_ascii=False)
+            custom_response_members = json.dumps(members_json, ensure_ascii=False, separators=(",", ":"))
         except Exception:
             custom_response_members = raw_members
         with open(MEMBERS_FILE, 'w', encoding='utf-8') as f:
@@ -117,7 +117,7 @@ def set_get_response():
             users_json = json.loads(raw_users, object_pairs_hook=OrderedDict)
             if "CurrentDateTime" in users_json:
                 users_json["CurrentDateTime"] = datetime.now(pytz.timezone("Europe/Istanbul")).isoformat()
-            custom_response_users = json.dumps(users_json, ensure_ascii=False)
+            custom_response_users = json.dumps(users_json, ensure_ascii=False, separators=(",", ":"))
         except Exception:
             custom_response_users = raw_users
         with open(USERS_FILE, 'w', encoding='utf-8') as f:
