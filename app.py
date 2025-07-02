@@ -75,10 +75,11 @@ def milk_delivery(user_id):
     ])
 
     return app.response_class(
-        response=json.dumps(response, ensure_ascii=False),
+        response=json.dumps(response, ensure_ascii=False, separators=(',', ':')),
         status=200,
         mimetype='application/json'
     )
+
 
 @app.route('/api/indicatorapi/get-members/<string:mac_id>', methods=['GET'])
 def get_members(mac_id):
