@@ -57,8 +57,10 @@
 						return copy;
 					});
 
-					document.getElementById('messages').textContent = JSON.stringify(formattedMessages, null, 2);
-				});
+					document.getElementById('messages').textContent = formattedMessages
+                    .map(msg => JSON.stringify(msg, null, 2))
+                    .join('\n\n');
+            });
 		}
 
 
