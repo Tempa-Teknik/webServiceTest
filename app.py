@@ -51,7 +51,7 @@ def milk_delivery(user_id):
     }
     messages.append(message)
 
-    index_number = parsed.get("IndexNumber", "UNKNOWN")
+    index_number = parsed.get("indexNumber", "UNKNOWN")
     generated_id = str(uuid.uuid4())
 
     response = {
